@@ -149,11 +149,13 @@ public class WebPage
     {
         if (m_links.Count == 0)
         {
-            Regex[] regex = new Regex[2];
+            Regex[] regex = new Regex[4];
             regex[0] = new Regex(@"<a\shref\s*=""(?<URL>[^""]*).*?>(?<title>[^<]*)</a>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
             regex[1] = new Regex("<[i]*frame[^><]+src=(\"|')?(?<url>([^>\"'\\s)])+)(\"|')?[^>]*>", RegexOptions.IgnoreCase);
+            regex[2] = new Regex("<img(?:.*)src=(\"{1}|\'{1})([^\\[^>]+[gif|jpg|jpeg|bmp|bmp|png]*)(\"{1}|\'{1})(?:.*)>", RegexOptions.IgnoreCase);
+            regex[3] = new Regex("<script>+src=(\"|'{1})(?:.*)>", RegexOptions.IgnoreCase);
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 Match match = regex[i].Match(m_html);
                 while (match.Success)
@@ -168,6 +170,7 @@ public class WebPage
                         Link link = new Link();
                         link.Text = text;
                         link.NavigateUrl = url;
+                        link.Tag = match.Groups[0].Value.Split(' ')[0].Remove(0, 1);
 
                         m_links.Add(link);
                     }

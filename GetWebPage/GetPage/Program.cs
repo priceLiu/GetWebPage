@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GetWebPage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,15 @@ namespace GetPage
     {
         static void Main(string[] args)
         {
-            WebPage webInfo = new WebPage("网址");
+            WebPage webInfo = new WebPage("http://msdn.microsoft.com/zh-cn/library/system.web.httputility(v=vs.110).aspx");
 
-            string context = webInfo.Context;//不包含html标签的所有内容  
+            string context = webInfo.Context;  
+            string html = webInfo.M_html;
 
-            string html = webInfo.M_html;//包含html标签的内容  
+            List<Link> result = webInfo.Links;
+
+            IEnumerable<IGrouping<string,Link>> tmp = result.GroupBy(o => o.Tag);
+
         }
     }
 }

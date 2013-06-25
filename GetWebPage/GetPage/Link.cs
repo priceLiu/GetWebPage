@@ -18,5 +18,11 @@ namespace GetWebPage
             get;
             set;
         }
+
+        public string Tag
+        {
+            get;
+            set;
+        }
     }
 }
