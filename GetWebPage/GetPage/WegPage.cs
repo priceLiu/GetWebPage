@@ -149,23 +149,30 @@ public class WebPage
     {
         if (m_links.Count == 0)
         {
-            Regex[] regex = new Regex[4];
+            Regex[] regex = new Regex[5];
             regex[0] = new Regex(@"<a\shref\s*=""(?<URL>[^""]*).*?>(?<title>[^<]*)</a>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            regex[1] = new Regex("<[i]*frame[^><]+src=(\"|')?(?<url>([^>\"'\\s)])+)(\"|')?[^>]*>", RegexOptions.IgnoreCase);
-            regex[2] = new Regex("<img(?:.*)src=(\"{1}|\'{1})([^\\[^>]+[gif|jpg|jpeg|bmp|bmp|png]*)(\"{1}|\'{1})(?:.*)>", RegexOptions.IgnoreCase);
-            regex[3] = new Regex("<script>+src=(\"|'{1})(?:.*)>", RegexOptions.IgnoreCase);
+            regex[1] = new Regex("<[i]*frame[^><]+src=(\"|')?(?<URL>([^>\"'\\s)])+)(\"|')?[^>]*>", RegexOptions.IgnoreCase);
+            regex[2] = new Regex("<img\\s*[^>]+src\\s*=\\s*['\"](?<URL>[^'\"]+)['\"][^>]*>", RegexOptions.IgnoreCase);
+            regex[3] = new Regex("<script\\s*[^>]+src\\s*=\\s*['\"](?<URL>[^'\"]+)['\"][^>]*>\\W</script>", RegexOptions.IgnoreCase);
+            regex[4] = new Regex("{\\s*url:\\s*['\"](?<URL>[^'\"]+)['\"][^}]*\\s}",RegexOptions.IgnoreCase);
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 Match match = regex[i].Match(m_html);
+
                 while (match.Success)
                 {
                     try
                     {
                         string url = HttpUtility.UrlDecode(new Uri(m_uri, match.Groups["URL"].Value).AbsoluteUri);
 
+                        
+
                         string text = "";
-                        if (i == 0) text = new Regex("(<[^>]+>)|(\\s)|( )|&|\"", RegexOptions.Multiline | RegexOptions.IgnoreCase).Replace(match.Groups["text"].Value, "");
+                        if (i == 0)
+                        {
+                            text = new Regex("(<[^>]+>)|(\\s)|( )|&|\"", RegexOptions.Multiline | RegexOptions.IgnoreCase).Replace(match.Groups["text"].Value, "");
+                        }
 
                         Link link = new Link();
                         link.Text = text;
@@ -174,7 +181,11 @@ public class WebPage
 
                         m_links.Add(link);
                     }
-                    catch (Exception ex) { Console.WriteLine(ex.Message); };
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+
                     match = match.NextMatch();
                 }
             }
