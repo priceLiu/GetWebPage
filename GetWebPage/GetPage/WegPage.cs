@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Data;
 using System.Configuration;
 using System.Net;
@@ -165,7 +165,7 @@ public class WebPage
                         string url = HttpUtility.UrlDecode(new Uri(m_uri, match.Groups["URL"].Value).AbsoluteUri);
 
                         string text = "";
-                        
+
                         if (i == 0)
                         {
                             text = new Regex("(<[^>]+>)|(\\s)|( )|&|\"", RegexOptions.Multiline | RegexOptions.IgnoreCase).Replace(match.Groups["text"].Value, "");
