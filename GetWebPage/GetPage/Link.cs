@@ -24,5 +24,11 @@ namespace GetWebPage
             get;
             set;
         }
+
+        public string Src
+        {
+            get;
+            set;
+        }
     }
 }
